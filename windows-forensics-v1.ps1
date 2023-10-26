@@ -11,6 +11,7 @@ if (!(Test-Path $BaseDir)){
     New-Item -ItemType Directory -Path $BaseDir | Out-Null
 }
 
+# Create the registry folder if it does not already exist
 if (!(Test-Path $RegistryFolder)){
     New-Item -ItemType Directory -Path $RegistryFolder | Out-Null
 }
@@ -184,6 +185,18 @@ foreach ($User in $Users.Keys) {
                 }
             }
         }
+    }
+}
+
+# Get the Recently Accessed Items
+foreach ($User in $Users.Keys) {
+    try {
+        Tee-Object -InputObject "`nGathering Recent Files for all users...`n$($Spacer)" -FilePath $LogFile -Append
+        Tee-Object -InputObject "[+] $($User)" -FilePath $LogFile -Append
+        Copy-Item -Path "C:\Users\$User\AppData\Roaming\Microsoft\Windows\Recent\*" -Destination "$BaseDir\recent files\$User" -Recurse -Force | Out-Null
+    }
+    catch {
+        Tee-Object -InputObject "[-] Could not retrieve Recent Files for $($User)" -FilePath $LogFile -Append
     }
 }
 
