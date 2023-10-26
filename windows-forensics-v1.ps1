@@ -11,6 +11,7 @@ if (!(Test-Path $BaseDir)){
     New-Item -ItemType Directory -Path $BaseDir | Out-Null
 }
 
+# Create the registry folder if it does not already exist
 if (!(Test-Path $RegistryFolder)){
     New-Item -ItemType Directory -Path $RegistryFolder | Out-Null
 }
@@ -33,6 +34,23 @@ Tee-Object -InputObject "`nBase Directory: $($BaseDir)" -FilePath $LogFile -Appe
 # Check what users are logged in
 Tee-Object -InputObject "The following users are currently logged in:" -FilePath $LogFile -Append
 quser | Tee-Object -FilePath $LogFile -Append
+
+$computerName = $env:COMPUTERNAME
+$operatingSystem = (Get-CimInstance Win32_OperatingSystem).Caption
+$architecture = (Get-CimInstance Win32_OperatingSystem).OSArchitecture
+$systemDrive = (Get-CimInstance Win32_LogicalDisk | Where-Object { $_.DeviceID -eq $env:SystemDrive }).Size / 1GB
+$memory = (Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB
+$cpuInfo = (Get-CimInstance Win32_Processor | Select-Object -First 1).Name
+
+Tee-Object -InputObject "`nSystem Information`n$Spacer" -FilePath $LogFile -Append
+Tee-Object -InputObject "Hostname: $computerName" -FilePath $LogFile -Append
+Tee-Object -InputObject "Operating System: $operatingSystem" -FilePath $LogFile -Append
+Tee-Object -InputObject "System Architecture: $architecture" -FilePath $LogFile -Append
+Tee-Object -InputObject "Main System Drive Size: $systemDrive GB" -FilePath $LogFile -Append
+Tee-Object -InputObject "Total Physical Memory: $memory GB" -FilePath $LogFile -Append
+Tee-Object -InputObject "CPU Information: $cpuInfo" -FilePath $LogFile -Append
+Tee-Object -InputObject "System Date and Time: $(Get-Date)" -FilePath $LogFile -Append
+Tee-Object -InputObject "System Timezone: $($(Get-TimeZone).DisplayName)" -FilePath $LogFile -Append
 
 # TODO: Make sure to gather up the bits of the registry that need to be rolled into the main registry files
 # Does this apply to users that are signed out? Is everything autmatically rolled into the main registry file when they log out?
@@ -79,7 +97,7 @@ $systemRegistries | ForEach-Object {
 # # Get the event logs
 Tee-Object -InputObject "`nGathering Event Logs...`n$($Spacer)" -FilePath $LogFile -Append
 
-$logs = @("Security", "System", "Application", "Windows Powershell")
+$logs = @("Security", "System", "Application")
 
 $logs | ForEach-Object {
     try {
@@ -140,7 +158,6 @@ $BrowsersInfo = @{
 
 # Get the data from all the browsers
 # Yes, this is a quadruple nested for-loop... not great, I know
-
 foreach ($User in $Users.Keys) {
     # Set the file path with the right username. Use a local array to store the temp info for each user
     $CustomBrowserInfo = @{}
@@ -186,7 +203,50 @@ foreach ($User in $Users.Keys) {
         }
     }
 }
+
+# Get the Recently Accessed Items
+foreach ($User in $Users.Keys) {
+    Tee-Object -InputObject "`nGathering Recent Files for all users...`n$($Spacer)" -FilePath $LogFile -Append
+    try {
+        Copy-Item -Path "C:\Users\$User\AppData\Roaming\Microsoft\Windows\Recent\*" -Destination "$BaseDir\recent files\$User" -Recurse -Force | Out-Null
+        Tee-Object -InputObject "[+] $($User)" -FilePath $LogFile -Append
+    }
+    catch {
+        Tee-Object -InputObject "[-] Could not retrieve Recent Files for $($User)" -FilePath $LogFile -Append
+    }
+}
+
+# Get the System Resource Usage Monitor
+Tee-Object -InputObject "`nGathering System Resource Usage Monitor...`n$($Spacer)" -FilePath $LogFile -Append
+try {
+    Copy-Item -Path "C:\Windows\System32\sru\SRUDB.dat" -Destination "$BaseDir\SRUDB.dat" -Force | Out-Null
+    Tee-Object -InputObject "[+] SRUDB.dat" -FilePath $LogFile -Append
+}
+catch {
+    Tee-Object -InputObject "[-] Could not retrieve SRUDB.dat" -FilePath $LogFile -Append
+}
+
+# Get the Amcache.hve file
+Tee-Object -InputObject "`nGathering Amcache.hve...`n$($Spacer)" -FilePath $LogFile -Append
+try {
+    Copy-Item -Path "C:\Windows\AppCompat\Programs\Amcache.hve" -Destination "$BaseDir\Amcache.hve" -Force | Out-Null
+    Tee-Object -InputObject "[+] Amcache.hve" -FilePath $LogFile -Append
+}
+catch {
+    Tee-Object -InputObject "[-] Could not retrieve Amcache.hve" -FilePath $LogFile -Append
+}
+
+# Active web connections
+Tee-Object -InputObject "`nGetting Established Web Connections...`n$($Spacer)" -FilePath $LogFile -Append
+Tee-Object -InputObject "$(Get-NetTCPConnection | Where-Object { $_.State -eq 'Established' } | Format-Table -AutoSize | Out-String)" -FilePath $LogFile -Append
+
+Tee-Object -InputObject "`nGetting Local Listening Connections...`n$($Spacer)" -FilePath $LogFile -Append
+Tee-Object -InputObject "$(Get-NetTCPConnection | Where-Object { $_.State -eq 'Listen' } | Format-Table -AutoSize | Out-String)" -FilePath $LogFile -Append
+
 # Put all the files in $BaseDir into a zip file for easy extraction
 Compress-Archive -Path "$BaseDir\*" -DestinationPath "$BaseDir\extractme.zip" -Force
 
-# Delete all the other files except the zip file?? Probably should clean up.
+# Delete all the other files except the zip file
+Tee-Object -InputObject "`nCleaning up...`n$($Spacer)" -FilePath $LogFile -Append
+Get-ChildItem $BaseDir | Where-Object {$_.Name -ne "extractme.zip"} | Remove-Item -Recurse -Force
+Write-Host "[+] Deleted all files except extractme.zip"
