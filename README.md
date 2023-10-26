@@ -14,7 +14,7 @@ In an ideal setting, this script would have the capability to be run remotely fr
 
 ### Functionality:
 The script works as follows:
-1. The script first defienes a few key Input/Output directories for later use. Namely, the results destination directory, the registry folder, and instantiates an empty hashmap of 'Users'
+1. The script first defines a few key Input/Output directories for later use. Namely, the results destination directory, the registry folder, and instantiates an empty hashmap of 'Users'
 2. The script checks for the existance of the base and registry folders. If they exist theexecution continues, otherwise they are created.
 3. Next the users in the C:\Users folder are enumerated and written to the terminal as output and to a Windows log file in the base directory.
 4. Next the script attempts to push all NTUSER.DAT files to the base directory. NTUSER.DAT files hold the personal configuration settings of each user. Every user has their own NTUSER.DAT file and is valuable information to have in the event of a compromise.
