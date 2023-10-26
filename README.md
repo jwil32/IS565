@@ -22,8 +22,28 @@ The script works as follows:
 6. Next the windows event logs are copied to the base directory. These inculde records of events that have taken place on the host and will likely include valuable evidence in the case of a legitimate breach.
 7. Last but not least, the script checks for common browsers installed on the system for each user. Where these browsers exist for each user, the browsing data, profile settings, tabs, etc. are gathered and aggregated in the base directory.
 
-### Proof of Concept:
+# WINDOWS FORENSICS V2 (Additions to V1)
+### Added Functionality:
+1. TBD
+
+# WINDOWS FORENSICS V3 (Additions to V2)
+### Added Functionality:
+1. TBD
+
+### Proof of Concept (Iteration #1):
 Terminal output from script...
 ![Terminal Output](/POC.png)
 Populated directory after execution...
+![Terminal Output](/BaseDirectory.png)
+
+### Proof of Concept (Iteration #2):
+TBD...
+![Terminal Output](/POC.png)
+TBD...
+![Terminal Output](/BaseDirectory.png)
+
+### Proof of Concept (Iteration #3):
+TBD...
+![Terminal Output](/POC.png)
+TBD...
 ![Terminal Output](/BaseDirectory.png)
