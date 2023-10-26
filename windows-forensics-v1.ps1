@@ -209,7 +209,20 @@ catch {
     Tee-Object -InputObject "[-] Could not retrieve SRUDB.dat" -FilePath $LogFile -Append
 }
 
+# Get the Amcache.hve file
+Tee-Object -InputObject "`nGathering Amcache.hve...`n$($Spacer)" -FilePath $LogFile -Append
+try {
+    Copy-Item -Path "C:\Windows\AppCompat\Programs\Amcache.hve" -Destination "$BaseDir\Amcache.hve" -Force | Out-Null
+    Tee-Object -InputObject "[+] Amcache.hve" -FilePath $LogFile -Append
+}
+catch {
+    Tee-Object -InputObject "[-] Could not retrieve Amcache.hve" -FilePath $LogFile -Append
+}
+
 # Put all the files in $BaseDir into a zip file for easy extraction
-Compress-Archive -Path "$BaseDir\*" -DestinationPath "$BaseDir\extractme.zip"
+Compress-Archive -Path "$BaseDir\*" -DestinationPath "$BaseDir\extractme.zip" -Force
 
 # Delete all the other files except the zip file?? Probably should clean up.
+Tee-Object -InputObject "`nCleaning up...`n$($Spacer)" -FilePath $LogFile -Append
+Get-ChildItem $BaseDir | Where-Object {$_.Name -ne "extractme.zip"} | Remove-Item -Recurse -Force
+Tee-Object -InputObject "[+] Deleted all files except extractme.zip" -FilePath $LogFile -Append
