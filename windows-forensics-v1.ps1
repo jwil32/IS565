@@ -141,7 +141,6 @@ $BrowsersInfo = @{
 
 # Get the data from all the browsers
 # Yes, this is a quadruple nested for-loop... not great, I know
-
 foreach ($User in $Users.Keys) {
     # Set the file path with the right username. Use a local array to store the temp info for each user
     $CustomBrowserInfo = @{}
