@@ -25,6 +25,9 @@ The script works as follows:
 # WINDOWS FORENSICS V2 (Additions to V1)
 ### Added Functionality:
 1. *** Functionality Added *** This script now extracts powershell event logs to the base directory for analysis. Powershell is a powerful tool that integrates into windows. It is useful for system administration and other legitimate purposes, but also doubles as a powerful hacking tool. Seeing these logs is valuable in the case of a compromised host. Often times malicious activity will show up here.
+2. *** Functionality Added *** This script now pulls a lot of relevant system information at the beginning of the script including hardware information, Windows version, and Timezone.
+3. *** Functionality Added *** This script now pulls `Established` and `Listen` network connections on the device
+4. *** Functionality Added *** This script now copies the Amcache database and the System Resource Usage database
 
 ### Proof of Concept (Iteration #1):
 Terminal output from script...
@@ -35,6 +38,15 @@ Populated directory after execution...
 ### Proof of Concept (Iteration #2):
 Terminal output showing the extraction of Powershell log events...
 ![Terminal Output](/POC2.png)
+
+Termial output of system information...
+
+![System Information](/POC2-sysinfo.png)
+
+Terminal output of network connections...
+
+![Network Information](/POC2-netinfo.png)
+
 Base Directory with added logging ad zip file for easy and fast extraction...
 ![Base Directory with added logging ad zip file for extraction](/BaseDirectoryIteration2.png)
 
