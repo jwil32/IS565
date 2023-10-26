@@ -249,4 +249,4 @@ Compress-Archive -Path "$BaseDir\*" -DestinationPath "$BaseDir\extractme.zip" -F
 # Delete all the other files except the zip file
 Tee-Object -InputObject "`nCleaning up...`n$($Spacer)" -FilePath $LogFile -Append
 Get-ChildItem $BaseDir | Where-Object {$_.Name -ne "extractme.zip"} | Remove-Item -Recurse -Force
-Write-Host "[+] Deleted all files except extractme.zip"
+Tee-Object -InputObject "[+] Deleted all files except extractme.zip" -FilePath $LogFile -Append
