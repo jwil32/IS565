@@ -35,6 +35,23 @@ Tee-Object -InputObject "`nBase Directory: $($BaseDir)" -FilePath $LogFile -Appe
 Tee-Object -InputObject "The following users are currently logged in:" -FilePath $LogFile -Append
 quser | Tee-Object -FilePath $LogFile -Append
 
+$computerName = $env:COMPUTERNAME
+$operatingSystem = (Get-CimInstance Win32_OperatingSystem).Caption
+$architecture = (Get-CimInstance Win32_OperatingSystem).OSArchitecture
+$systemDrive = (Get-CimInstance Win32_LogicalDisk | Where-Object { $_.DeviceID -eq $env:SystemDrive }).Size / 1GB
+$memory = (Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB
+$cpuInfo = (Get-CimInstance Win32_Processor | Select-Object -First 1).Name
+
+Tee-Object -InputObject "`nSystem Information`n$Spacer" -FilePath $LogFile -Append
+Tee-Object -InputObject "Hostname: $computerName" -FilePath $LogFile -Append
+Tee-Object -InputObject "Operating System: $operatingSystem" -FilePath $LogFile -Append
+Tee-Object -InputObject "System Architecture: $architecture" -FilePath $LogFile -Append
+Tee-Object -InputObject "Main System Drive Size: $systemDrive GB" -FilePath $LogFile -Append
+Tee-Object -InputObject "Total Physical Memory: $memory GB" -FilePath $LogFile -Append
+Tee-Object -InputObject "CPU Information: $cpuInfo" -FilePath $LogFile -Append
+Tee-Object -InputObject "System Date and Time: $(Get-Date)" -FilePath $LogFile -Append
+Tee-Object -InputObject "System Timezone: $($(Get-TimeZone).DisplayName)" -FilePath $LogFile -Append
+
 # TODO: Make sure to gather up the bits of the registry that need to be rolled into the main registry files
 # Does this apply to users that are signed out? Is everything autmatically rolled into the main registry file when they log out?
 
@@ -218,6 +235,13 @@ try {
 catch {
     Tee-Object -InputObject "[-] Could not retrieve Amcache.hve" -FilePath $LogFile -Append
 }
+
+# Active web connections
+Tee-Object -InputObject "`nGetting Established Web Connections...`n$($Spacer)" -FilePath $LogFile -Append
+Tee-Object -InputObject "$(Get-NetTCPConnection | Where-Object { $_.State -eq 'Established' } | Format-Table -AutoSize | Out-String)" -FilePath $LogFile -Append
+
+Tee-Object -InputObject "`nGetting Local Listening Connections...`n$($Spacer)" -FilePath $LogFile -Append
+Tee-Object -InputObject "$(Get-NetTCPConnection | Where-Object { $_.State -eq 'Listen' } | Format-Table -AutoSize | Out-String)" -FilePath $LogFile -Append
 
 # Put all the files in $BaseDir into a zip file for easy extraction
 Compress-Archive -Path "$BaseDir\*" -DestinationPath "$BaseDir\extractme.zip" -Force

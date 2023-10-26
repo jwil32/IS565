@@ -20,10 +20,35 @@ The script works as follows:
 4. Next the script attempts to push all NTUSER.DAT files to the base directory. NTUSER.DAT files hold the personal configuration settings of each user. Every user has their own NTUSER.DAT file and is valuable information to have in the event of a compromise.
 5. Next the system registries are copied to the base directory. These registries are arguably the most important pieces of information to have in the event of a breach. Often times malware will overwrite or modify registry values in windows. Windows registry is the hierarchical database that holds the low-level settings for the Windows operating system.
 6. Next the windows event logs are copied to the base directory. These inculde records of events that have taken place on the host and will likely include valuable evidence in the case of a legitimate breach.
-7. Last but not least, the script checks for common browsers installed on the system for each user. Where these browsers exist for each user, the browsing data, profile settings, tabs, etc. are gathered and aggregated in the base directory.
+7. The script then checks for common browsers installed on the system for each user. Where these browsers exist for each user, the browsing data, profile settings, tabs, etc. are gathered and aggregated in the base directory.
 
-### Proof of Concept:
+# WINDOWS FORENSICS V2 (Additions to V1)
+### Added Functionality:
+1. *** Functionality Added *** This script now extracts powershell event logs to the base directory for analysis. Powershell is a powerful tool that integrates into windows. It is useful for system administration and other legitimate purposes, but also doubles as a powerful hacking tool. Seeing these logs is valuable in the case of a compromised host. Often times malicious activity will show up here.
+2. *** Functionality Added *** This script now pulls a lot of relevant system information at the beginning of the script including hardware information, Windows version, and Timezone.
+3. *** Functionality Added *** This script now pulls `Established` and `Listen` network connections on the device
+4. *** Functionality Added *** This script now copies the Amcache database and the System Resource Usage database
+
+### Proof of Concept (Iteration #1):
 Terminal output from script...
 ![Terminal Output](/POC.png)
 Populated directory after execution...
-![Terminal Output](/BaseDirectory.png)
+![Base Directory](/BaseDirectory.png)
+
+### Proof of Concept (Iteration #2):
+Terminal output showing the extraction of Powershell log events...
+![Terminal Output](/POC2.png)
+
+Termial output of system information...
+
+![System Information](/POC2-sysinfo.png)
+
+Terminal output of network connections...
+
+![Network Information](/POC2-netinfo.png)
+
+Base Directory with added logging ad zip file for easy and fast extraction...
+![Base Directory with added logging ad zip file for extraction](/BaseDirectoryIteration2.png)
+
+### Proof of Concept (Iteration #3):
+
