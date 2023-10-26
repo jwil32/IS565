@@ -189,14 +189,24 @@ foreach ($User in $Users.Keys) {
 
 # Get the Recently Accessed Items
 foreach ($User in $Users.Keys) {
+    Tee-Object -InputObject "`nGathering Recent Files for all users...`n$($Spacer)" -FilePath $LogFile -Append
     try {
-        Tee-Object -InputObject "`nGathering Recent Files for all users...`n$($Spacer)" -FilePath $LogFile -Append
-        Tee-Object -InputObject "[+] $($User)" -FilePath $LogFile -Append
         Copy-Item -Path "C:\Users\$User\AppData\Roaming\Microsoft\Windows\Recent\*" -Destination "$BaseDir\recent files\$User" -Recurse -Force | Out-Null
+        Tee-Object -InputObject "[+] $($User)" -FilePath $LogFile -Append
     }
     catch {
         Tee-Object -InputObject "[-] Could not retrieve Recent Files for $($User)" -FilePath $LogFile -Append
     }
+}
+
+# Get the System Resource Usage Monitor
+Tee-Object -InputObject "`nGathering System Resource Usage Monitor...`n$($Spacer)" -FilePath $LogFile -Append
+try {
+    Copy-Item -Path "C:\Windows\System32\sru\SRUDB.dat" -Destination "$BaseDir\SRUDB.dat" -Force | Out-Null
+    Tee-Object -InputObject "[+] SRUDB.dat" -FilePath $LogFile -Append
+}
+catch {
+    Tee-Object -InputObject "[-] Could not retrieve SRUDB.dat" -FilePath $LogFile -Append
 }
 
 # Put all the files in $BaseDir into a zip file for easy extraction
