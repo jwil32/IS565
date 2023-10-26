@@ -79,7 +79,7 @@ $systemRegistries | ForEach-Object {
 # # Get the event logs
 Tee-Object -InputObject "`nGathering Event Logs...`n$($Spacer)" -FilePath $LogFile -Append
 
-$logs = @("Security", "System", "Application")
+$logs = @("Security", "System", "Application", "Windows Powershell")
 
 $logs | ForEach-Object {
     try {
@@ -186,8 +186,7 @@ foreach ($User in $Users.Keys) {
         }
     }
 }
-
 # Put all the files in $BaseDir into a zip file for easy extraction
-Compress-Archive -Path "$BaseDir\*" -DestinationPath "$BaseDir\extractme.zip"
+Compress-Archive -Path "$BaseDir\*" -DestinationPath "$BaseDir\extractme.zip" -Force
 
 # Delete all the other files except the zip file?? Probably should clean up.
