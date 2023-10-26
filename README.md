@@ -18,7 +18,7 @@ The script works as follows:
 2. The script checks for the existance of the base and registry folders. If they exist theexecution continues, otherwise they are created.
 3. Next the users in the C:\Users folder are enumerated and written to the terminal as output and to a Windows log file in the base directory.
 4. Next the script attempts to push all NTUSER.DAT files to the base directory. NTUSER.DAT files hold the personal configuration settings of each user. Every user has their own NTUSER.DAT file and is valuable information to have in the event of a compromise.
-5. Next the system registries are copied to the basedirectory. These registries are arguably the most important pieces of information to have in the event of a breach. Often times malware will overwrite or modify registry values in windows. Windows registry is the hierarchical database that holds the low-level settings for the Windows operating system.
+5. Next the system registries are copied to the base directory. These registries are arguably the most important pieces of information to have in the event of a breach. Often times malware will overwrite or modify registry values in windows. Windows registry is the hierarchical database that holds the low-level settings for the Windows operating system.
 6. Next the windows event logs are copied to the base directory. These inculde records of events that have taken place on the host and will likely include valuable evidence in the case of a legitimate breach.
 7. Last but not least, the script checks for common browsers installed on the system for each user. Where these browsers exist for each user, the browsing data, profile settings, tabs, etc. are gathered and aggregated in the base directory.
 
