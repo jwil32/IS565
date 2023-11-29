@@ -30,7 +30,7 @@ The script works as follows:
 4. *** Functionality Added *** This script now copies the Amcache database and the System Resource Usage database
 
 # WINDOWS FORENSICS V3 (Additions to V2)
-### Added Functinoality:
+### Added Functionality:
 1. *** Functionality Added *** The script will now create a nicely formatted HTML report of the findings in from the script and include it in the base directory of that the script saves the files to. This was added so that the user doesn't have to look through a boring text file to learn what the script found and instead can have a pretty HTML page to look at. 
 
 ### Proof of Concept (Iteration #1):
