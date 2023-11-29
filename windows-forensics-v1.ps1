@@ -61,6 +61,8 @@ Tee-Object -InputObject "System Timezone: $($(Get-TimeZone).DisplayName)" -FileP
 # You can't copy files in that are currently in use by the system or a 
 # logged in user so the built-in tool 'reg' has to be used to export the registries
 
+Tee-Object -InputObject "`nData Collection Logs:" -FilePath $LogFile -Append
+
 Tee-Object -InputObject "`nAttempting to copy NTUSER.DAT files...`n$($Spacer)" -FilePath $LogFile -Append
 
 foreach ($User in $Users.Keys) {
@@ -243,10 +245,103 @@ Tee-Object -InputObject "$(Get-NetTCPConnection | Where-Object { $_.State -eq 'E
 Tee-Object -InputObject "`nGetting Local Listening Connections...`n$($Spacer)" -FilePath $LogFile -Append
 Tee-Object -InputObject "$(Get-NetTCPConnection | Where-Object { $_.State -eq 'Listen' } | Format-Table -AutoSize | Out-String)" -FilePath $LogFile -Append
 
+# Function to create html document
+function ConvertToHTML {
+    param (
+        [string]$inputFilePath = "log.txt",
+        [string]$outputFilePath = "output.html"
+    )
+
+    # Read contents of the input file
+    $content = Get-Content -Path $inputFilePath -Raw
+
+    # Define the CSS for styling the HTML
+    $style = @"
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+        }
+        h1 {
+            color: #333;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 20px;
+            overflow: auto;
+        }
+        .section {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .subsection {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .failure {
+            color: red;
+            font-weight: bold;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+"@
+
+    # Create the HTML structure
+    $sysinfo = $($($content -split '---------------------------------------------------------------')[1] -split 'Data')[0]
+    $datalogs = $($content -split 'Data Collection Logs:')[1]
+    $html = @"
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Log File</title>
+    $style
+</head>
+<body>
+    <h1>Investigation Log</h1>
+    <div class="section">
+        <h2>Base Directory</h2>
+        <p>C:\Windows\Temp\investigate</p>
+    </div>
+    <div class="section">
+        <h2>System Information</h2>
+        <p>$($sysinfo -replace '\n', '</br>')</p>
+    </div>
+    <div class="section">
+        <h2>Data Extraction Logs</h2>
+        <pre>$datalogs</pre>
+    <!-- Add more sections for different parts of the log as needed -->
+</body>
+</html>
+"@
+
+    # Write HTML content to a new file
+    $html | Out-File -FilePath $outputFilePath -Encoding UTF8
+
+    Write-Host "HTML file '$outputFilePath' created successfully!"
+}
+
+# Create the report
+ConvertToHTML -inputFilePath "C:\Windows\Temp\investigate\log.txt" -outputFilePath "C:\Windows\Temp\investigate\Report.html"
+
 # Put all the files in $BaseDir into a zip file for easy extraction
-Compress-Archive -Path "$BaseDir\*" -DestinationPath "$BaseDir\extractme.zip" -Force
+#Compress-Archive -Path "$BaseDir\*" -DestinationPath "$BaseDir\extractme.zip" -Force
 
 # Delete all the other files except the zip file
-Tee-Object -InputObject "`nCleaning up...`n$($Spacer)" -FilePath $LogFile -Append
-Get-ChildItem $BaseDir | Where-Object {$_.Name -ne "extractme.zip"} | Remove-Item -Recurse -Force
-Tee-Object -InputObject "[+] Deleted all files except extractme.zip" -FilePath $LogFile -Append
+#Tee-Object -InputObject "`nCleaning up...`n$($Spacer)" -FilePath $LogFile -Append
+#Get-ChildItem $BaseDir | Where-Object {$_.Name -ne "extractme.zip"} | Remove-Item -Recurse -Force
