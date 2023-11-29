@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Log File</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+        }
+        h1 {
+            color: #333;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 20px;
+            overflow: auto;
+        }
+        .section {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .subsection {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .failure {
+            color: red;
+            font-weight: bold;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Investigation Log</h1>
+    <div class="section">
+        <h2>Base Directory</h2>
+        <p>C:\Windows\Temp\investigate</p>
+    </div>
+    <div class="section">
+        <h2>System Information</h2>
+        <p></br>Hostname: WINDEV2309EVAL</br>Operating System: Microsoft Windows 11 Enterprise Evaluation</br>System Architecture: 64-bit</br>Main System Drive Size: 124.482418060303 GB</br>Total Physical Memory: 7.99904251098633 GB</br>CPU Information: Intel(R) Core(TM) i7-8665U CPU @ 1.90GHz</br>System Date and Time: 11/29/2023 11:32:44</br>System Timezone: (UTC-08:00) Pacific Time (US & Canada)</br></br></p>
+    </div>
+    <div class="section">
+        <h2>Data Extraction Logs</h2>
+        <pre>
+
+Attempting to copy NTUSER.DAT files...
+---------------------------------------------------------------
+[+] Copied HKU\S-1-5-21-1548686062-2596924386-1925252855-1000 (User) to C:\Windows\Temp\investigate\registries\User\NTUSER.DAT
+
+Attempting to copy System Registry files...
+---------------------------------------------------------------
+[+] Copied sam log to C:\Windows\Temp\investigate\registries\sam.hiv
+[+] Copied system log to C:\Windows\Temp\investigate\registries\system.hiv
+[+] Copied security log to C:\Windows\Temp\investigate\registries\security.hiv
+[+] Copied software log to C:\Windows\Temp\investigate\registries\software.hiv
+
+Gathering Event Logs...
+---------------------------------------------------------------
+[+] Copied Security log to C:\Windows\Temp\investigate\Security.evtx
+[+] Copied System log to C:\Windows\Temp\investigate\System.evtx
+[+] Copied Application log to C:\Windows\Temp\investigate\Application.evtx
+
+Checking for browsers...
+---------------------------------------------------------------
+[-] Mozilla Firefox was not found
+[-] Google Chrome was not found
+[+] Microsoft Edge 119.0.2151.72 was found
+
+Gathering browser data files...
+---------------------------------------------------------------
+[+] Mozilla Firefox (Username: User)
+[+] Google Chrome (Username: User)
+[+] Microsoft Edge (Username: User)
+	[+] Copied History to C:\Windows\Temp\investigate\edge\User\Default
+	[+] Copied Web Data to C:\Windows\Temp\investigate\edge\User\Default
+	[+] Copied Login Data to C:\Windows\Temp\investigate\edge\User\Default
+	[+] Copied Shortcuts to C:\Windows\Temp\investigate\edge\User\Default
+	[+] Copied Visited Links to C:\Windows\Temp\investigate\edge\User\Default
+
+Gathering Recent Files for all users...
+---------------------------------------------------------------
+[+] User
+
+Gathering System Resource Usage Monitor...
+---------------------------------------------------------------
+[+] SRUDB.dat
+
+Gathering Amcache.hve...
+---------------------------------------------------------------
+[-] Could not retrieve Amcache.hve
+
+Getting Established Web Connections...
+---------------------------------------------------------------
+
+LocalAddress    LocalPort RemoteAddress  RemotePort State       AppliedSetting OwningProcess
+------------    --------- -------------  ---------- -----       -------------- -------------
+192.168.200.139 58794     10.32.112.90   7680       Established Internet       9080         
+192.168.200.139 58793     72.21.81.240   80         Established Internet       2924         
+192.168.200.139 58791     20.99.186.246  443        Established Internet       6004         
+192.168.200.139 58790     52.182.143.210 443        Established Internet       5972         
+192.168.200.139 58788     69.192.139.103 443        Established Internet       5972         
+192.168.200.139 58778     69.192.139.104 443        Established Internet       5972         
+192.168.200.139 58776     69.192.139.71  443        Established Internet       5972         
+192.168.200.139 58740     23.195.33.171  443        Established Internet       9080         
+192.168.200.139 58242     40.83.247.108  443        Established Internet       3096         
+192.168.200.139 58241     40.83.247.108  443        Established Internet       3096         
+
+
+
+
+Getting Local Listening Connections...
+---------------------------------------------------------------
+
+LocalAddress    LocalPort RemoteAddress RemotePort State  AppliedSetting OwningProcess
+------------    --------- ------------- ---------- -----  -------------- -------------
+::              49669     ::            0          Listen                748          
+::              49668     ::            0          Listen                2620         
+::              49667     ::            0          Listen                1656         
+::              49666     ::            0          Listen                1328         
+::              49665     ::            0          Listen                628          
+::              49664     ::            0          Listen                792          
+::              7680      ::            0          Listen                9080         
+::              445       ::            0          Listen                4            
+::              135       ::            0          Listen                444          
+0.0.0.0         49669     0.0.0.0       0          Listen                748          
+0.0.0.0         49668     0.0.0.0       0          Listen                2620         
+0.0.0.0         49667     0.0.0.0       0          Listen                1656         
+0.0.0.0         49666     0.0.0.0       0          Listen                1328         
+0.0.0.0         49665     0.0.0.0       0          Listen                628          
+0.0.0.0         49664     0.0.0.0       0          Listen                792          
+0.0.0.0         5040      0.0.0.0       0          Listen                4720         
+192.168.200.139 139       0.0.0.0       0          Listen                4            
+0.0.0.0         135       0.0.0.0       0          Listen                444          
+
+
+
+</pre>
+    <!-- Add more sections for different parts of the log as needed -->
+</body>
+</html>
