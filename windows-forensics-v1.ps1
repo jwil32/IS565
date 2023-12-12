@@ -340,8 +340,8 @@ function ConvertToHTML {
 ConvertToHTML -inputFilePath "C:\Windows\Temp\investigate\log.txt" -outputFilePath "C:\Windows\Temp\investigate\Report.html"
 
 # Put all the files in $BaseDir into a zip file for easy extraction
-#Compress-Archive -Path "$BaseDir\*" -DestinationPath "$BaseDir\extractme.zip" -Force
+Compress-Archive -Path "$BaseDir\*" -DestinationPath "$BaseDir\extractme.zip" -Force
 
 # Delete all the other files except the zip file
-#Tee-Object -InputObject "`nCleaning up...`n$($Spacer)" -FilePath $LogFile -Append
-#Get-ChildItem $BaseDir | Where-Object {$_.Name -ne "extractme.zip"} | Remove-Item -Recurse -Force
+Tee-Object -InputObject "`nCleaning up...`n$($Spacer)" -FilePath $LogFile -Append
+Get-ChildItem $BaseDir | Where-Object {$_.Name -ne "extractme.zip"} | Remove-Item -Recurse -Force
